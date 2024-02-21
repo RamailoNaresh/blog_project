@@ -33,6 +33,21 @@ def create_author(request):
     except Exception as e:
         return Response({"error": str(e)})
     
+@api_view(["PUT", "PATCH"])
+def update_author(request, id):
+    try:
+        data = JSONParser().parse(request)
+        obj = AuthorService.get_author_by_id(id)
+        serializer = AuthorSerializer(obj,data=data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    except Exception as e:
+        return Response({"Error": str(e)})
+
+
+
 @api_view(["DELETE"])
 def delete_author(request, id):
     try:

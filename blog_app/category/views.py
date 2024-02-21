@@ -35,6 +35,22 @@ def create_category(request):
     except Exception as e:
         return Response({"error": str(e)})
     
+@api_view(["PUT", "PATCH"])
+def update_category(request, id):
+    try:
+        data = JSONParser().parse(request)
+        obj = CategoryService.get_category_by_id(id)
+        serializer = CategorySerializer(obj,data=data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    except Exception as e:
+        return Response({"Error": str(e)})
+
+
+
+
 @api_view(["DELETE"])
 def delete_category(request, id):
     try:
