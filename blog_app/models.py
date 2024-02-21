@@ -24,7 +24,7 @@ class Author(BaseModel):
     
 
 class Category(BaseModel):
-    title = models.CharField(max_length = 255)
+    title = models.CharField(max_length = 255, unique = True)
     description = models.TextField(blank = True)
 
     def __str__(self):
