@@ -15,5 +15,13 @@ urlpatterns = [
     path("v1/category/<str:id>/", category_views.get_category_by_id, name = 'category-detail'),
     path("v1/create_category/", category_views.create_category, name = "create-category"),
     path("v1/delete_category/<str:id>/", category_views.delete_category, name = "delete-category"),
-    path("v1/update_category/<str:id>/", category_views.update_category, name = "update-category")
+    path("v1/update_category/<str:id>/", category_views.update_category, name = "update-category"),
+    path("v1/posts/", post_views.get_all_post, name = "posts"),
+    path("v1/post_by_id/<str:id>/", post_views.get_post_by_id, name = "post-by-id"),
+    path("v1/post_by_author/<str:id>/", post_views.get_post_by_author, name = "post-by-author"),
+    path("v1/post_by_category/<str:id>/", post_views.get_post_by_category, name = "post-by-category"),
+    path("v1/post_by_slug/<str:slug>/", post_views.get_post_by_slug, name = "post-by-slug"),
+    path("v1/delete_post/<str:id>/", post_views.delete_post, name = "delete-post"),
+    path("v1/create_post/", post_views.create_post, name = "create-post"),
+    path("v1/update_post/<str:id>/", post_views.update_post, name = "update-post")
 ]
