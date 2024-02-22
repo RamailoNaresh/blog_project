@@ -52,3 +52,9 @@ class PostService:
             raise Exception("Data doesn't exists")
         PostAccess.delete_post(id)
 
+    @staticmethod
+    def get_unpublished_post():
+        data = PostAccess.get_unpublished_post()
+        if data:
+            return data
+        raise Exception("No unpublished data")

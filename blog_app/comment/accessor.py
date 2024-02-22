@@ -9,7 +9,7 @@ class CommentAccess:
     
     @staticmethod
     def get_all_comments():
-        return Comment.objects.all()
+        return Comment.objects.filter(is_approved = True).all()
     
     @staticmethod
     def get_comment_by_id(id):
@@ -26,6 +26,10 @@ class CommentAccess:
         comment.delete()
 
     @staticmethod
-    def get_comment_by_post(self, post_id):
+    def get_comment_by_post(post_id):
         post = PostAccess.get_post_by_id(post_id)
-        return Comment.objects.filter(post = post).all()
+        return Comment.objects.filter(post = post, is_approved = True).all()
+    
+    @staticmethod
+    def get_unapproved_comments():
+        return Comment.objects.filter(is_approved = False).all()

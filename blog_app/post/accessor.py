@@ -40,5 +40,8 @@ class PostAccess:
         post = PostAccess.get_post_by_id(id)
         post.delete()
 
+    @staticmethod
+    def get_unpublished_post():
+        return Post.objects.filter(is_published = False).all()
 
 
