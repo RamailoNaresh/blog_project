@@ -33,3 +33,9 @@ class CommentAccess:
     @staticmethod
     def get_unapproved_comments():
         return Comment.objects.filter(is_approved = False).all()
+    
+    @staticmethod
+    def approve_comment(id):
+        data  = CommentAccess.get_comment_by_id(id)
+        data.is_approved = True
+        data.save()

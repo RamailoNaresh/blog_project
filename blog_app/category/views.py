@@ -1,4 +1,4 @@
-from .category import CategoryService
+from .category import Category
 from rest_framework.response import Response
 from .serializers import CategorySerializer
 from rest_framework.parsers import JSONParser
@@ -7,7 +7,7 @@ from rest_framework import status
 
 @api_view(["GET"])
 def get_all_category(request):
-    data = CategoryService.get_all_category()
+    data = Category.get_all_category()
     serializer = CategorySerializer(data, many = True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -15,7 +15,7 @@ def get_all_category(request):
 @api_view(["GET"])
 def get_category_by_id(request, id):
     try:
-        data = CategoryService.get_category_by_id(id)
+        data = Category.get_category_by_id(id)
         serializer = CategorySerializer(data)
         return Response(serializer.data, status = status.HTTP_200_OK)
     except Exception as e:
@@ -39,7 +39,7 @@ def create_category(request):
 def update_category(request, id):
     try:
         data = JSONParser().parse(request)
-        obj = CategoryService.get_category_by_id(id)
+        obj = Category.get_category_by_id(id)
         serializer = CategorySerializer(obj,data=data, partial = True)
         if serializer.is_valid():
             serializer.save()
@@ -54,7 +54,7 @@ def update_category(request, id):
 @api_view(["DELETE"])
 def delete_category(request, id):
     try:
-        CategoryService.delete_category(id)
+        Category.delete_category(id)
         return Response({"message": "Data successfully deleted"}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

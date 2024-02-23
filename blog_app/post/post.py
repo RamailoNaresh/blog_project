@@ -1,9 +1,7 @@
 from .accessor import PostAccess
 from slugify import slugify
-from blog_app.category.category import CategoryService
 
-
-class PostService:
+class Post:
 
     @staticmethod
     def get_all_post():

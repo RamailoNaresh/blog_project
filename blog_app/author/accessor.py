@@ -5,7 +5,7 @@ class AuthorAccess:
 
     @staticmethod
     def get_all_author():
-        return Author.objects.filter(active = True).all()
+        return Author.objects.filter(active = True).all().order_by("-created_at")
 
     @staticmethod
     def get_author_by_id(id):

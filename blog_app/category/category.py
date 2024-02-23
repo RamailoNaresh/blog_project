@@ -1,7 +1,7 @@
 from .accessor import CategoryAccess
 
 
-class CategoryService:
+class Category:
 
     @staticmethod
     def get_all_category():

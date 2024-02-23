@@ -1,7 +1,7 @@
 from .accessor import AuthorAccess
 
 
-class AuthorService:
+class Author:
 
     @staticmethod
     def get_all_author():

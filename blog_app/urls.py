@@ -32,4 +32,5 @@ urlpatterns = [
     path("v1/delete_comment/<str:id>/", comment_views.delete_comment, name = "delete-comment"),
     path("v1/update_comment/<str:id>/", comment_views.update_comment, name = "update-comment"),
     path("v1/unapproved_comments/", comment_views.get_unapproved_comments, name = "unapproved-comments"),
+    path("v1/approve_comment/<str:id>/", comment_views.approve_comment, name = "approve-comment"),
 ]

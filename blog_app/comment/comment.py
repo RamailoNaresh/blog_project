@@ -1,8 +1,8 @@
 from .accessor import CommentAccess
-from blog_app.post.post import PostAccess
+from blog_app.post.post import Post
 
 
-class CommentService:
+class Comment:
 
     @staticmethod
     def get_all_comments():
@@ -21,7 +21,7 @@ class CommentService:
     
     @staticmethod
     def get_comment_by_post(post_id):
-        post = PostAccess.get_post_by_id(post_id)
+        post = Post.get_post_by_id(post_id)
         data = CommentAccess.get_comment_by_post(post_id)
         if data:
             return data
@@ -29,8 +29,8 @@ class CommentService:
     
     @staticmethod
     def delete_comment(id):
-        post = CommentAccess.get_comment_by_id(id)
-        if not post:
+        comment = CommentAccess.get_comment_by_id(id)
+        if not comment:
             raise Exception("Comment doesn't exists")
         CommentAccess.delete_comment(id)
 
@@ -40,3 +40,13 @@ class CommentService:
         if not data:
             raise Exception("No unapproved data")
         return data
+    
+    @staticmethod
+    def approve_comment(id):
+        data = CommentAccess.get_comment_by_id(id)
+        if data:
+            if data.is_approved:
+                raise Exception("Comment is already verified")
+            CommentAccess.approve_comment(id)
+            return data
+        raise Exception("Data doesn't exists")

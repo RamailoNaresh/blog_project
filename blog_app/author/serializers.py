@@ -5,4 +5,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Author
-        fields = "__all__"
+        fields = ["id", "name", "email", "bio", "role", "password"]
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
