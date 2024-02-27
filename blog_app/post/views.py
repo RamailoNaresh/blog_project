@@ -119,7 +119,7 @@ def update_post(request, id):
         data = JSONParser().parse(request)
         post = Post.get_post_by_id(id)
         user = get_logged_user(request.user.id) 
-        if user.role == "Admin" or user.id == post.author:
+        if user.role == "Admin" or user.id == post.author.id:
             serializer = PostSerializer(post, data = data, partial  = True)
             if serializer.is_valid():
                 serializer.save()
