@@ -15,13 +15,13 @@ class Author:
         data = AuthorAccess.get_author_by_id(id)
         if data:
             return data
-        raise Exception("Data not found")
+        raise ValueError("Data not found")
     
     @staticmethod
     def delete_author(id):
         data = AuthorAccess.get_author_by_id(id)
         if data is None:
-            raise Exception("Data not found")
+            raise ValueError("Data not found")
         AuthorAccess.delete_author(id)
 
     @staticmethod
@@ -29,15 +29,15 @@ class Author:
         data = AuthorAccess.get_user_by_email(email)
         if email:
             return data
-        raise Exception("User doesn't exists")
+        raise ValueError("User doesn't exists")
     
     @staticmethod
     def login_user(email , password):
         user = Author.get_user_by_email(email)
         if not user:
-            raise Exception("Email or password didnt't matched")
+            raise ValueError("Email or password didnt't matched")
         check_password = validate_password(password, user.password)
         if not check_password:
-            raise Exception("Email or password didn't matched")
+            raise ValueError("Email or password didn't matched")
         token = generate_token(user)
         return user, token

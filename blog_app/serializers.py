@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 
 class TokenSerializer(serializers.Serializer):
-    accessToken = serializers.CharField()
-    refreshToken = serializers.CharField()
+    access_token = serializers.CharField()
+    refresh_token = serializers.CharField()
 
     def to_representation(self, instance):
         return {

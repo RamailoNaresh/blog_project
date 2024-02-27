@@ -13,12 +13,12 @@ class Category:
         data = CategoryAccess.get_category_by_id(id)
         if data:
             return data
-        raise Exception("Data not found")
+        raise ValueError("Data not found")
 
     @staticmethod
     def delete_category(id):
         data = CategoryAccess.get_category_by_id(id)
         if data is None:
-            raise Exception("Data not found")
+            raise ValueError("Data not found")
         CategoryAccess.delete_category(id)
 

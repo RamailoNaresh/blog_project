@@ -5,11 +5,14 @@ from blog_app.shared.pagination import paginate
 from .comment import Comment
 from rest_framework.decorators import api_view
 from .serializers import CommentSerializer
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+from blog_app.services.tokens import get_logged_user
 from blog_app.api import api
 from blog_app.api.response_builder import ResponseBuilder
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_all_comments(request):
     response_builder = ResponseBuilder()
     try:
@@ -17,22 +20,28 @@ def get_all_comments(request):
         comments, page_info = paginate(data, request)
         serializer = CommentSerializer(comments, many = True)
         return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
-    except Exception as e:
+    except ValueError as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_comment_by_id(request, id):
     response_builder = ResponseBuilder()
     try:
         data = Comment.get_comment_by_id(id)
         serializer = CommentSerializer(data)
-        return response_builder.get_200_success_response("Data fetched", serializer.data)
-    except Exception as e:
+        return response_builder.get_201_success_response("Data fetched", serializer.data)
+    except ValueError as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_comment_by_post(request, post_id):
     response_builder = ResponseBuilder()
     try:
@@ -40,11 +49,14 @@ def get_comment_by_post(request, post_id):
         comments, page_info = paginate(data, request)
         serializer = CommentSerializer(comments, many = True)
         return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
-    except Exception as e:
+    except ValueError as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def create_comment(request):
     response_builder = ResponseBuilder()
     try:
@@ -54,52 +66,78 @@ def create_comment(request):
             serializer.save()
             return response_builder.get_201_success_response("Comment successfully added", serializer.data)
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
-    except Exception as e:
+    except ValueError as e:
         return response_builder.get_400_bad_request_response(api.COMMENT_NOT_FOUND, str(e))
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 
 
 @api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
 def delete_comment(request, id):
     response_builder = ResponseBuilder()
     try:
-        Comment.delete_comment(id)
-        return response_builder.get_200_success_response("Data succesfully deleted")
-    except Exception as e:
+        user = get_logged_user(request.user.id)
+        if user.role == "Admin":
+            Comment.delete_comment(id)
+            return response_builder.get_201_success_response("Data succesfully deleted")
+        return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
+    except ValueError as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 @api_view(["PUT", "PATCH"])
+@permission_classes([IsAuthenticated])
 def update_comment(request, id):
     response_builder = ResponseBuilder()
     try:
-        data = JSONParser().parse(request)
-        comment = Comment.get_comment_by_id(id)
-        serializer = CommentSerializer(comment, data = data, partial = True)
-        if serializer.is_valid():
-            serializer.save()
-            return response_builder.get_200_success_response("Comment successfully updated", serializer.data)
-        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
-    except Exception as e:
+        user = get_logged_user(request.user.id)
+        if user.role == "Admin":
+            data = JSONParser().parse(request)
+            comment = Comment.get_comment_by_id(id)
+            serializer = CommentSerializer(comment, data = data, partial = True)
+            if serializer.is_valid():
+                serializer.save()
+                return response_builder.get_201_success_response("Comment successfully updated", serializer.data)
+            return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+        return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
+    except ValueError as e:
         return response_builder.get_400_bad_request_response(api.COMMENT_NOT_FOUND, str(e))
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_unapproved_comments(request):
     response_builder = ResponseBuilder()
     try:
-        data = Comment.get_unapproved_comments()
-        comments, page_info = paginate(data, request)
-        serializer = CommentSerializer(comments, many = True)
-        return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
-    except Exception as e:
+        user = get_logged_user(request.user.id)
+        if user.role == "Admin":
+            data = Comment.get_unapproved_comments()
+            comments, page_info = paginate(data, request)
+            serializer = CommentSerializer(comments, many = True)
+            return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
+        return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
+    except ValueError as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def approve_comment(request, id):
     response_builder = ResponseBuilder()
     try:
-        data = Comment.approve_comment(id)
-        serializer = CommentSerializer(data)
-        return response_builder.get_200_success_response("Data fetched", serializer.data)
-    except Exception as e:
+        user = get_logged_user(request.user.id)
+        if user.role == "Admin":
+            data = Comment.approve_comment(id)
+            serializer = CommentSerializer(data)
+            return response_builder.get_201_success_response("Data fetched", serializer.data)
+        return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
+    except ValueError as e:
         return response_builder.get_400_bad_request_response(api.COMMENT_NOT_FOUND, str(e))
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)

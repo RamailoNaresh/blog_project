@@ -60,6 +60,9 @@ class ResponseBuilder(object):
         self.status = status.HTTP_400_BAD_REQUEST
         return self
 
+    def server_error_500(self):
+        self.status = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return self
 
     def user_unauthorized_401(self):
         self.status = status.HTTP_401_UNAUTHORIZED
@@ -123,5 +126,12 @@ class ResponseBuilder(object):
 
     def get_200_login_success_response(self,message, result = {}):
         return self.success().ok_200().message(message).result_object(result).get_response()
+    
+    def get_500_server_error_response(self, error_code):
+        return self.server_error_500().fail().set_status_code(error_code).get_response()
+    
+
+    def get_401_unauthorized_access_response(self, error_code):
+        return self.user_unauthorized_401().fail().set_status_code(error_code).get_response()
 
 

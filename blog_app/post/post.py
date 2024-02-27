@@ -13,7 +13,7 @@ class Post:
         data =PostAccess.get_post_by_id(id)
         if data:
             return data
-        raise Exception("No data available")
+        raise ValueError("No data available")
     
 
     @staticmethod
@@ -21,14 +21,14 @@ class Post:
         data = PostAccess.get_post_by_author(id)
         if data:
             return data
-        raise Exception("No data available")
+        raise ValueError("No data available")
     
     @staticmethod
     def get_post_by_slug(slug):
         data = PostAccess.get_post_by_slug(slug)
         if data:
             return data
-        raise Exception("No data available")
+        raise ValueError("No data available")
 
 
     @staticmethod
@@ -41,13 +41,13 @@ class Post:
         data = PostAccess.get_post_by_category(id)
         if data:
             return data
-        raise Exception("No data available")
+        raise ValueError("No data available")
 
     @staticmethod
     def delete_post(id):
         data = PostAccess.get_post_by_id(id)
         if not data:
-            raise Exception("Data doesn't exists")
+            raise ValueError("Data doesn't exists")
         PostAccess.delete_post(id)
 
     @staticmethod
@@ -55,4 +55,4 @@ class Post:
         data = PostAccess.get_unpublished_post()
         if data:
             return data
-        raise Exception("No unpublished data")
+        raise ValueError("No unpublished data")

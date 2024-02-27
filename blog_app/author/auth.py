@@ -24,21 +24,23 @@ def login_user(request):
             "token": token
         }
         return response_builder.get_200_login_success_response(api.LOGIN_SUCCESS, data)
-    except Exception as e:
-        return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND, str(e))
+    except ValueError as e:
+        return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
+    except:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
 
 
 @api_view(["POST"])
 def create_author(request):
-    respones_builder = ResponseBuilder()
+    response_builder = ResponseBuilder()
     try:
         data = JSONParser().parse(request)
         serializer = AuthorSerializer(data =data)
         if serializer.is_valid():
             serializer.save()
-            return respones_builder.get_201_success_response("Data succesfully created", serializer.data)
-        return respones_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+            return response_builder.get_201_success_response("Data succesfully created", serializer.data)
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     except Exception as e:
-        return respones_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND, str(e))
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
     
