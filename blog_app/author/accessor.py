@@ -20,3 +20,7 @@ class AuthorAccess:
         author = AuthorAccess.get_author_by_id(id)
         author.active = False
         author.save()
+
+    @staticmethod
+    def get_user_by_email(email):
+        return Author.objects.filter(email__iexact = email).first()

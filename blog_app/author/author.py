@@ -1,4 +1,6 @@
 from .accessor import AuthorAccess
+from blog_app.util.password_encoder import validate_password
+from blog_app.services.tokens import generate_token
 
 
 class Author:
@@ -21,3 +23,21 @@ class Author:
         if data is None:
             raise Exception("Data not found")
         AuthorAccess.delete_author(id)
+
+    @staticmethod
+    def get_user_by_email(email):
+        data = AuthorAccess.get_user_by_email(email)
+        if email:
+            return data
+        raise Exception("User doesn't exists")
+    
+    @staticmethod
+    def login_user(email , password):
+        user = Author.get_user_by_email(email)
+        if not user:
+            raise Exception("Email or password didnt't matched")
+        check_password = validate_password(password, user.password)
+        if not check_password:
+            raise Exception("Email or password didn't matched")
+        token = generate_token(user)
+        return user, token

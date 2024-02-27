@@ -1,5 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+
+from blog_app.shared.pagination import paginate
 from .comment import Comment
 from rest_framework.decorators import api_view
 from .serializers import CommentSerializer
@@ -12,8 +14,9 @@ def get_all_comments(request):
     response_builder = ResponseBuilder()
     try:
         data = Comment.get_all_comments()
-        serializer = CommentSerializer(data, many = True)
-        return response_builder.get_200_success_response("Data fetched", serializer.data)
+        comments, page_info = paginate(data, request)
+        serializer = CommentSerializer(comments, many = True)
+        return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
     except Exception as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
     
@@ -34,8 +37,9 @@ def get_comment_by_post(request, post_id):
     response_builder = ResponseBuilder()
     try:
         data = Comment.get_comment_by_post(post_id)
-        serializer = CommentSerializer(data, many = True)
-        return response_builder.get_200_success_response("Data fetched", serializer.data)
+        comments, page_info = paginate(data, request)
+        serializer = CommentSerializer(comments, many = True)
+        return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
     except Exception as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
     
@@ -83,8 +87,9 @@ def get_unapproved_comments(request):
     response_builder = ResponseBuilder()
     try:
         data = Comment.get_unapproved_comments()
-        serializer = CommentSerializer(data, many  = True)
-        return response_builder.get_200_success_response("Data fetched", serializer.data)
+        comments, page_info = paginate(data, request)
+        serializer = CommentSerializer(comments, many = True)
+        return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
     except Exception as e:
         return response_builder.get_404_not_found_response(api.COMMENT_NOT_FOUND)
     

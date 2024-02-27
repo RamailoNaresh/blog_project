@@ -4,7 +4,7 @@ SUCCESS = 1
 INVALID_INPUT = 100
 
 
-
+LOGIN_SUCCESS = 200
 
 AUTHOR_NOT_FOUND = 400
 POST_NOT_FOUND = 401
@@ -14,6 +14,7 @@ COMMENT_NOT_FOUND = 403
 
 
 error_messages = {
+    LOGIN_SUCCESS: "Logged in succesfully",
     INVALID_INPUT: "Invalid input",
     AUTHOR_NOT_FOUND: "Author not found",
     POST_NOT_FOUND: "Post not found",

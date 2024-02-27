@@ -6,13 +6,16 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from blog_app.api import api
 from blog_app.api.response_builder import ResponseBuilder
+from blog_app.shared.pagination import paginate
+
 
 @api_view(["GET"])
 def get_all_category(request):
     response_builder = ResponseBuilder()
     data = Category.get_all_category()
-    serializer = CategorySerializer(data, many = True)
-    return response_builder.get_200_success_response("Data fetched", serializer.data)
+    categories, page_info = paginate(data, request)
+    serializer = CategorySerializer(categories, many = True)
+    return response_builder.get_200_success_response("Data fetched",page_info, serializer.data)
 
 
 @api_view(["GET"])

@@ -3,12 +3,12 @@ from blog_app.author import views as author_views
 from blog_app.comment import views as comment_views
 from blog_app.category import views as category_views
 from blog_app.post import views as post_views
-
+from blog_app.author import auth
 
 urlpatterns = [
     path("v1/authors/", author_views.get_all_author, name = "authors"),
     path("v1/author/<str:id>/", author_views.get_author_by_id, name = 'author-detail'),
-    path("v1/create_author/", author_views.create_author, name = "create-author"),
+    path("v1/create_author/", auth.create_author, name = "create-author"),
     path("v1/delete_author/<str:id>/", author_views.delete_author, name = "delete-author"),
     path("v1/update_author/<str:id>/", author_views.update_author, name = "update=author"),
     path("v1/categories/", category_views.get_all_category, name = "categories"),
@@ -33,4 +33,5 @@ urlpatterns = [
     path("v1/update_comment/<str:id>/", comment_views.update_comment, name = "update-comment"),
     path("v1/unapproved_comments/", comment_views.get_unapproved_comments, name = "unapproved-comments"),
     path("v1/approve_comment/<str:id>/", comment_views.approve_comment, name = "approve-comment"),
+    path("v1/login/", auth.login_user, name = "login")
 ]

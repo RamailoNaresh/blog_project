@@ -1,4 +1,6 @@
 from rest_framework.response import Response
+
+from blog_app.shared.pagination import paginate
 from .serializers import PostSerializer
 from .post import Post
 from rest_framework.decorators import api_view
@@ -6,6 +8,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from blog_app.api import api
 from blog_app.api.response_builder import ResponseBuilder
+
+
 @api_view(["POST"])
 def create_post(request):
     respones_builder = ResponseBuilder()
@@ -25,8 +29,9 @@ def create_post(request):
 def get_all_post(request):
     respones_builder = ResponseBuilder()
     data = Post.get_all_post()
-    serializer = PostSerializer(data, many = True)
-    return respones_builder.get_200_success_response("Data successfully fetched", serializer.data)
+    posts, page_info = paginate(data, request)
+    serializer = PostSerializer(posts, many = True)
+    return respones_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
 
 
 @api_view(["GET"])
@@ -54,8 +59,9 @@ def get_post_by_author(request, id):
     respones_builder = ResponseBuilder()
     try:
         data = Post.get_post_by_author(id)
-        serializer = PostSerializer(data, many = True)
-        return respones_builder.get_200_success_response("Data successfully fetched", serializer.data)
+        posts, page_info = paginate(data, request)
+        serializer = PostSerializer(posts, many = True)
+        return respones_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
     except Exception as e:
         return respones_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     
@@ -64,8 +70,9 @@ def get_post_by_category(request, id):
     respones_builder = ResponseBuilder()
     try:
         data = Post.get_post_by_category(id)
-        serializer = PostSerializer(data, many  =True)
-        return respones_builder.get_200_success_response("Data successfully fetched", serializer.data)
+        posts, page_info = paginate(data, request)
+        serializer = PostSerializer(posts, many = True)
+        return respones_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
     except Exception as e:
         return respones_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     
@@ -99,8 +106,9 @@ def get_unpublished_post(request):
     respones_builder = ResponseBuilder()
     try:
         data = Post.get_unpublished_post()
-        serializer = PostSerializer(data, many = True)
-        return respones_builder.get_200_success_response("Data successfully fetched", serializer.data)
+        posts, page_info = paginate(data, request)
+        serializer = PostSerializer(posts, many = True)
+        return respones_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
     except Exception as e:
         return respones_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     
