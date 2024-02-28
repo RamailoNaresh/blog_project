@@ -116,7 +116,7 @@ class ResponseBuilder(object):
         return self.not_found_404().fail().set_status_code(error_code).get_response()
 
 
-    def get_201_success_response(self, message, result):
+    def get_201_success_response(self, message, result = None):
         return self.success().created_201().message(message).result_object(result).get_response()
 
 
@@ -127,8 +127,8 @@ class ResponseBuilder(object):
     def get_200_login_success_response(self,message, result = {}):
         return self.success().ok_200().message(message).result_object(result).get_response()
     
-    def get_500_server_error_response(self, error_code):
-        return self.server_error_500().fail().set_status_code(error_code).get_response()
+    def get_500_server_error_response(self, error_code, error):
+        return self.server_error_500().fail().error_object(error).set_status_code(error_code).get_response()
     
 
     def get_401_unauthorized_access_response(self, error_code):

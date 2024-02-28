@@ -31,8 +31,8 @@ def get_category_by_id(request, id):
         return response_builder.get_200_success_response("Data fetched", serializer.data)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.CATEGORY_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
         
 
 
@@ -52,8 +52,8 @@ def create_category(request):
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.CATEGORY_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 @api_view(["PUT", "PATCH"])
 @permission_classes([IsAuthenticated])
@@ -72,8 +72,8 @@ def update_category(request, id):
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.CATEGORY_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
 
 
 
@@ -86,9 +86,9 @@ def delete_category(request, id):
         user = get_logged_user(request.user.id)
         if user.role == "Admin":
             Category.delete_category(id)
-            return response_builder.get_200_success_response("Category Successfully deleted")
+            return response_builder.get_201_success_response("Category Successfully deleted")
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.CATEGORY_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))

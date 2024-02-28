@@ -6,7 +6,7 @@ class PostAccess:
 
     @staticmethod
     def get_all_post():
-        return Post.objects.filter(is_active = True, is_published = True).all()
+        return Post.objects.filter(is_active = True, is_published = True).order_by("-created_at").all()
     
     @staticmethod
     def get_post_by_id(id):

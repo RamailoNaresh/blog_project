@@ -26,8 +26,8 @@ def create_post(request):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
 
 
 @api_view(["GET"])
@@ -50,8 +50,8 @@ def get_post_by_id(request, id):
         return response_builder.get_201_success_response("Data successfully fetched", serializer.data)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -63,8 +63,8 @@ def get_post_by_slug(request, slug):
         return response_builder.get_201_success_response("Data successfully fetched", serializer.data)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -77,8 +77,8 @@ def get_post_by_author(request, id):
         return response_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -91,8 +91,8 @@ def get_post_by_category(request, id):
         return response_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
@@ -107,8 +107,8 @@ def delete_post(request, id):
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
         return response_builder.get_404_not_found_response(api.POST_NOT_FOUND)
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 
 @api_view(["PUT", "PATCH"])
@@ -128,8 +128,8 @@ def update_post(request, id):
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
         return response_builder.get_404_not_found_response(api.POST_NOT_FOUND)
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 
 @api_view(["GET"])
@@ -146,6 +146,6 @@ def get_unpublished_post(request):
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
-    except:
-        return response_builder.get_500_server_error_response(api.SERVER_ERROR)
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
