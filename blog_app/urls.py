@@ -37,5 +37,6 @@ urlpatterns = [
     path("v1/login/", auth.login_user, name = "login"),
     path("v1/verify_otp/", auth.check_otp, name = "check-otp"),
     path("v1/forget_password/", forget_password_views.forget_password, name = "forget-password"),
-    path("v1/forget_password/<str:token>/", forget_password_views.check_forget_password, name = "check-password")
+    path("v1/forget_password/<str:token>/", forget_password_views.check_forget_password, name = "check-password"),
+    path("v1/send_verification_mail/", auth.send_verification_email, name = "send-verification-mail")
 ]

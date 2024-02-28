@@ -41,16 +41,17 @@ def forget_password(request):
 def check_forget_password(request, token):
     response_builder = ResponseBuilder()
     try:
-        data = JSONParser().parse(request)
-        serializer = ChangePasswordSerializer(data = data)
-        if serializer.is_valid():
-            forget_password = ForgetPassword.get_forget_password_by_token(token)
-            author = forget_password.author
-            author.password = serializer.data["password"]
-            author.save()
-            ForgetPassword.delete_forget_password(author.id)
-            return response_builder.get_201_success_response("Password successfully changed")
-        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+        password = request.data["password"]
+        if password == "":
+            return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Password field is required")
+        forget_password = ForgetPassword.get_forget_password_by_token(token)
+        author = forget_password.author
+        author.password = password
+        author.save()
+        ForgetPassword.delete_forget_password(author.id)
+        return response_builder.get_201_success_response("Password successfully changed")
+    except KeyError:
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "All fields is required")
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
     except Exception as e:

@@ -54,9 +54,9 @@ def create_author(request):
 def check_otp(request):
     response_builder = ResponseBuilder()
     try:
-        otp = request.data.get("otp")
-        email = request.data.get("email")
-        if otp is None or email is None:
+        otp = request.data["otp"]
+        email = request.data["email"]
+        if otp =="" or email =="":
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "All Fields are required")
         author = Author.get_user_by_email(email)
         if author.is_verified:
@@ -72,8 +72,28 @@ def check_otp(request):
         author.save()
         serializer = AuthorSerializer(author)
         return response_builder.get_201_success_response("User successfully verified", serializer.data)
+    except KeyError:
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "All fields is required")
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
     except Exception as e:
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
+@api_view(["POST"])
+def send_verification_email(request):
+    response_builder = ResponseBuilder()
+    try:
+        email = request.data["email"]
+        if email == "":
+            return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "All Fields are required")
+        author = Author.get_user_by_email(email)
+        if author.is_verified:
+            return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "User is already verified")
+        send_otp_mail(author)
+        return response_builder.get_201_success_response("Please check you email")
+    except KeyError:
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Email field is required")
+    except ValueError as e:
+        return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
+    except Exception as e:
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e)) 
