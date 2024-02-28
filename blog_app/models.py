@@ -28,6 +28,9 @@ class Author(BaseModel):
     active = models.BooleanField(default = True)
     role = models.CharField(max_length = 50, choices = CHOICES)
     password = models.CharField(max_length = 255)
+    otp = models.CharField(max_length = 10, null = True, blank = True)
+    otp_sent_date = models.DateTimeField(null = True, blank = True)
+    is_verified = models.BooleanField(default = False)
 
     def save(self, *args, **kwargs):
         author = Author.objects.filter(id = self.pk).first()
@@ -98,3 +101,9 @@ class Comment(BaseModel):
 
     def __str__(self):
         return "Comment by {self.name} on {self.post.title}"
+    
+
+class ForgetPassword(BaseModel):
+    token = models.CharField(max_length = 255)
+    author = models.OneToOneField(Author, on_delete = models.CASCADE)
+

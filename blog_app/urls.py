@@ -4,6 +4,7 @@ from blog_app.comment import views as comment_views
 from blog_app.category import views as category_views
 from blog_app.post import views as post_views
 from blog_app.author import auth
+from blog_app.ForgetPassword import views as forget_password_views
 
 urlpatterns = [
     path("v1/authors/", author_views.get_all_author, name = "authors"),
@@ -33,5 +34,8 @@ urlpatterns = [
     path("v1/update_comment/<str:id>/", comment_views.update_comment, name = "update-comment"),
     path("v1/unapproved_comments/", comment_views.get_unapproved_comments, name = "unapproved-comments"),
     path("v1/approve_comment/<str:id>/", comment_views.approve_comment, name = "approve-comment"),
-    path("v1/login/", auth.login_user, name = "login")
+    path("v1/login/", auth.login_user, name = "login"),
+    path("v1/verify_otp/", auth.check_otp, name = "check-otp"),
+    path("v1/forget_password/", forget_password_views.forget_password, name = "forget-password"),
+    path("v1/forget_password/<str:token>/", forget_password_views.check_forget_password, name = "check-password")
 ]

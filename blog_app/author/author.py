@@ -27,7 +27,7 @@ class Author:
     @staticmethod
     def get_user_by_email(email):
         data = AuthorAccess.get_user_by_email(email)
-        if email:
+        if data:
             return data
         raise ValueError("User doesn't exists")
     
