@@ -94,8 +94,7 @@ class Post(BaseModel):
 
 class Comment(BaseModel):
     post = models.ForeignKey(Post, on_delete = models.CASCADE, related_name = "comments")
-    name = models.CharField(max_length = 255)
-    email = models.EmailField()
+    author = models.ForeignKey(Author, on_delete = models.CASCADE)
     content = models.TextField()
     is_approved = models.BooleanField(default = False)
 

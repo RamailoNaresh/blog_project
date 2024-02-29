@@ -30,6 +30,7 @@ def get_all_comments(request):
 @permission_classes([IsAuthenticated])
 def get_comment_by_id(request, id):
     response_builder = ResponseBuilder()
+    user = get_logged_user(request.user.id)
     try:
         data = Comment.get_comment_by_id(id)
         serializer = CommentSerializer(data)
@@ -59,8 +60,10 @@ def get_comment_by_post(request, post_id):
 @permission_classes([IsAuthenticated])
 def create_comment(request):
     response_builder = ResponseBuilder()
+    user = get_logged_user(request.user.id)
     try:
         data = JSONParser().parse(request)
+        data["author"] = user.id
         serializer = CommentSerializer(data = data)
         if serializer.is_valid():
             serializer.save()
@@ -79,7 +82,8 @@ def delete_comment(request, id):
     response_builder = ResponseBuilder()
     try:
         user = get_logged_user(request.user.id)
-        if user.role == "Admin":
+        comment = Comment.get_comment_by_id(id)
+        if user.role == "Admin" or comment.author == user.id:
             Comment.delete_comment(id)
             return response_builder.get_201_success_response("Data succesfully deleted")
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
@@ -94,9 +98,9 @@ def update_comment(request, id):
     response_builder = ResponseBuilder()
     try:
         user = get_logged_user(request.user.id)
-        if user.role == "Admin":
+        comment = Comment.get_comment_by_id(id)
+        if user.role == "Admin" or comment.author == user.id:
             data = JSONParser().parse(request)
-            comment = Comment.get_comment_by_id(id)
             serializer = CommentSerializer(comment, data = data, partial = True)
             if serializer.is_valid():
                 serializer.save()

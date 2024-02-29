@@ -8,7 +8,7 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("id","name", "email", "post")
+    list_display = ("id","author","content", "post")
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):

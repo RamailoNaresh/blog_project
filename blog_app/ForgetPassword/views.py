@@ -21,15 +21,9 @@ def forget_password(request):
         if check_token:
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Email already send")
         token_data = send_forget_password_link(author)
-        data ={
-            "token": token_data,
-            "author": author.id
-        }
-        obj = ForgetPasswordSerializer(data = data)
-        if obj.is_valid():
-            obj.save()
+        if token_data == True:
             return response_builder.get_201_success_response("Please check your email.")
-        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, obj.errors)
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, token_data)
     except ValueError as e:
         return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
     except Exception as e:

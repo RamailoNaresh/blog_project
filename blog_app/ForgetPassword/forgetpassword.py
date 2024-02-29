@@ -8,7 +8,7 @@ class ForgetPassword:
         data = ForgetPasswordAccess.get_forget_password_by_token(token)
         if data is not None:
             return data
-        raise ValueError("Data doesn't exists")
+        raise ValueError("Invalid token")
     
 
     @staticmethod
@@ -17,7 +17,7 @@ class ForgetPassword:
         data = ForgetPasswordAccess.get_forget_password_by_author(author)
         if data:
             return data
-        raise ValueError("Data doesn't exists")
+        raise ValueError("Invalid token")
     
 
     @staticmethod

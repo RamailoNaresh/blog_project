@@ -15,9 +15,11 @@ from blog_app.api.response_builder import ResponseBuilder
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_post(request):
+    user = get_logged_user(request.user.id)
     response_builder = ResponseBuilder()
     try:
         data = JSONParser().parse(request)
+        data["author"] = user.id
         new_data = Post.create_post(data)
         serializer = PostSerializer(data = new_data)
         if serializer.is_valid():

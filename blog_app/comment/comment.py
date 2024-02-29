@@ -1,6 +1,6 @@
 from .accessor import CommentAccess
 from blog_app.post.post import Post
-
+from blog_app.author.author import Author
 
 class Comment:
 
@@ -27,6 +27,15 @@ class Comment:
             return data
         raise ValueError("No comments available")
     
+    @staticmethod
+    def get_comment_by_author(author_id):
+        author = Author.get_author_by_id(author_id)
+        data = CommentAccess.get_comment_by_author(author_id)
+        if data:
+            return data
+        raise ValueError("No comments available")
+    
+
     @staticmethod
     def delete_comment(id):
         comment = CommentAccess.get_comment_by_id(id)

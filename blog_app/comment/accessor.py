@@ -16,9 +16,10 @@ class CommentAccess:
         return Comment.objects.filter(id = id).first()
     
     @staticmethod
-    def create_comment(post_id, name, email, content, is_approved = ""):
+    def create_comment(post_id, author_id, content, is_approved = ""):
         post = PostAccess.get_post_by_id(post_id)
-        Comment.objects.create(post = post, name = name, email = email, content = content, is_approved = is_approved)
+        author = AuthorAccess.get_author_by_id(author_id)
+        Comment.objects.create(post = post, author = author, content = content, is_approved = is_approved)
 
     @staticmethod
     def delete_comment(id):
@@ -30,6 +31,12 @@ class CommentAccess:
         post = PostAccess.get_post_by_id(post_id)
         return Comment.objects.filter(post = post, is_approved = True).all()
     
+    @staticmethod
+    def get_comment_by_author(author_id):
+        author = AuthorAccess.get_author_by_id(author_id)
+        return Comment.objects.filter(author = author, is_approved = True).all()
+    
+
     @staticmethod
     def get_unapproved_comments():
         return Comment.objects.filter(is_approved = False).all()
