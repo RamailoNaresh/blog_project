@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.db import models
 from blog_app.util.util import get_char_uuid
-from blog_app.util.password_encoder import encrypt_password, validate_password
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class BaseModel(models.Model):
@@ -33,16 +34,15 @@ class Author(BaseModel):
     is_verified = models.BooleanField(default = False)
 
     def save(self, *args, **kwargs):
-        author = Author.objects.filter(id = self.pk).first()
-        if author:
-            checking_pass = validate_password(self.password, author.password)
-            if not checking_pass:
-                self.password = encrypt_password(self.password)
-        else:
-            self.password = encrypt_password(self.password)
-
-        super().save(*args, **kwargs)
-
+        author = Author.objects.filter(pk=self.pk).first()
+        if not author:
+            self.password = make_password(self.password)
+            return super().save(*args, **kwargs)
+        password_changed = self.password != author.password
+        if not password_changed:
+            return super().save(*args, **kwargs)
+        self.password = make_password(self.password)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

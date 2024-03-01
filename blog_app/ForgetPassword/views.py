@@ -40,8 +40,7 @@ def check_forget_password(request, token):
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Password field is required")
         forget_password = ForgetPassword.get_forget_password_by_token(token)
         author = forget_password.author
-        author.password = password
-        author.save()
+        Author.change_password(author.id, password)
         ForgetPassword.delete_forget_password(author.id)
         return response_builder.get_201_success_response("Password successfully changed")
     except KeyError:

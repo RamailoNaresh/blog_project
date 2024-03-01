@@ -24,3 +24,23 @@ class AuthorAccess:
     @staticmethod
     def get_user_by_email(email):
         return Author.objects.filter(email__iexact = email, active = True).first()
+    
+    @staticmethod
+    def change_password(author_id, password):
+        author = AuthorAccess.get_author_by_id(author_id)
+        author.password = password
+        author.save()
+
+    @staticmethod
+    def verify_author(author_id):
+        author = AuthorAccess.get_author_by_id(author_id)
+        author.is_verified = True
+        author.otp = None
+        author.save()
+
+
+    @staticmethod
+    def delete_otp(author_id):
+        author = AuthorAccess.get_author_by_id(author_id)
+        author.otp = None
+        author.save()
