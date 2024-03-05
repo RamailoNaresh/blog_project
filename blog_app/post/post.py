@@ -17,6 +17,15 @@ class Post:
     
 
     @staticmethod
+    def get_post_by_id_both(id):
+        data =PostAccess.get_post_by_id_both(id)
+        if data:
+            return data
+        raise ValueError("No data available")
+    
+
+
+    @staticmethod
     def get_post_by_author(id):
         data = PostAccess.get_post_by_author(id)
         if data:

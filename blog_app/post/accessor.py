@@ -11,7 +11,12 @@ class PostAccess:
     @staticmethod
     def get_post_by_id(id):
         return Post.objects.filter(id = id, is_active = True, is_published = True).first()
-    
+
+
+    @staticmethod
+    def get_post_by_id_both(id):
+        return Post.objects.filter(id = id, is_active = True).first()
+
     @staticmethod
     def get_post_by_author(id):
         author = AuthorAccess.get_author_by_id(id)

@@ -7,7 +7,7 @@ from .forgetpassword import ForgetPassword
 from .serializers import ForgetPasswordSerializer, ChangePasswordSerializer
 from .accessor import ForgetPasswordAccess
 from rest_framework.parsers import JSONParser
-
+from blog_app.services.logger import logger_info, logger_warning
 
 @api_view(["POST"])
 def forget_password(request):
@@ -15,18 +15,24 @@ def forget_password(request):
     try:
         email = request.data.get("email")
         if email is None:
+            logger_warning.warning("Email field was empty")
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Email is required")
         author = Author.get_user_by_email(email)
         check_token = ForgetPasswordAccess.get_forget_password_by_author(author.id)
         if check_token:
+            logger_warning.warning("Email was already sent")
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Email already send")
         token_data = send_forget_password_link(author)
         if token_data == True:
+            logger_info.info(f"Mail is sent to {email}")
             return response_builder.get_201_success_response("Please check your email.")
+        logger_warning.warning(token_data)
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, token_data)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 
@@ -37,15 +43,20 @@ def check_forget_password(request, token):
     try:
         password = request.data["password"]
         if password == "":
+            logger_warning.warning("Password field was empty")
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Password field is required")
         forget_password = ForgetPassword.get_forget_password_by_token(token)
         author = forget_password.author
         Author.change_password(author.id, password)
         ForgetPassword.delete_forget_password(author.id)
+        logger_info.info(f"Password changed for {author.email}")
         return response_builder.get_201_success_response("Password successfully changed")
     except KeyError:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "All fields is required")
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))

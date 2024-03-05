@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from blog_app.api import api
 from blog_app.api.response_builder import ResponseBuilder
-
+from blog_app.services.logger import logger_info, logger_warning
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -24,11 +24,15 @@ def create_post(request):
         serializer = PostSerializer(data = new_data)
         if serializer.is_valid():
             serializer.save()
+            logger_info.info(f"Post created by {user.email}")
             return response_builder.get_201_success_response("Post successfully created", serializer.data)
+        logger_warning.warning(serializer.errors)
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
 
 
@@ -51,8 +55,10 @@ def get_post_by_id(request, id):
         serializer = PostSerializer(data)
         return response_builder.get_201_success_response("Data successfully fetched", serializer.data)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 @api_view(["GET"])
@@ -64,8 +70,10 @@ def get_post_by_slug(request, slug):
         serializer = PostSerializer(data)
         return response_builder.get_201_success_response("Data successfully fetched", serializer.data)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
 
 @api_view(["GET"])
@@ -78,8 +86,10 @@ def get_post_by_author(request, id):
         serializer = PostSerializer(posts, many = True)
         return response_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 @api_view(["GET"])
@@ -92,8 +102,10 @@ def get_post_by_category(request, id):
         serializer = PostSerializer(posts, many = True)
         return response_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 @api_view(["DELETE"])
@@ -105,11 +117,15 @@ def delete_post(request, id):
         post = Post.get_post_by_id(id)
         if user.role == "Admin" or user.id == post.author:
             Post.delete_post(id)
+            logger_info.info(f"{user.email} deleted post")
             return response_builder.get_201_success_response("Data successfully deleted")
+        logger_warning.warning(f"Access denied {user.email}")
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_404_not_found_response(api.POST_NOT_FOUND)
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 
@@ -119,18 +135,23 @@ def update_post(request, id):
     response_builder = ResponseBuilder()
     try:
         data = JSONParser().parse(request)
-        post = Post.get_post_by_id(id)
+        post = Post.get_post_by_id_both(id)
         user = get_logged_user(request.user.id) 
         if user.role == "Admin" or user.id == post.author.id:
             serializer = PostSerializer(post, data = data, partial  = True)
             if serializer.is_valid():
                 serializer.save()
+                logger_info.info(f"{user.email} updated post")
                 return response_builder.get_201_success_response("Data successfully updated", serializer.data)
+            logger_warning.warning(serializer.errors)
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+        logger_warning.warning(f"Access denied {user.email}")
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_404_not_found_response(api.POST_NOT_FOUND)
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 
@@ -145,9 +166,12 @@ def get_unpublished_post(request):
             posts, page_info = paginate(data, request)
             serializer = PostSerializer(posts, many = True)
             return response_builder.get_200_success_response("Data successfully fetched",page_info, serializer.data)
+        logger_warning.warning(f"Access denied {user.email}")
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)
     except ValueError as e:
+        logger_warning.warning(str(e))
         return response_builder.get_400_bad_request_response(api.POST_NOT_FOUND, str(e))
     except Exception as e:
+        logger_warning.warning(str(e))
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     

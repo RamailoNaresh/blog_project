@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+# from corsheaders.defaults import default_headers
 from dotenv import load_dotenv
 import os
 
@@ -26,13 +27,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+
+GOOGLE_SSO_CLIENT_ID = os.environ.get("GOOGLE_SSO_CLIENT_ID")
+GOOGLE_SSO_PROJECT_ID = os.environ.get("GOOGLE_SSO_PROJECT_ID")
+GOOGLE_SSO_CLIENT_SECRET = os.environ.get("GOOGLE_SSO_CLIENT_SECRET")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
-
 ALLOWED_HOSTS = []
+# CORS_ALLOWED_ORIGINS = [
+#        'https://example.com',
+#        'https://www.example2.com'
+#        ]
+# CORS_ALLOW_HEADERS = default_headers + (
+#    'access-control-allow-headers',
+# )
+GOOGLE_SSO_ALLOWABLE_DOMAINS = ["gmail.com", "ramailo.tech"]
 
 
 # Application definition
+GOOGLE_SSO_SUPERUSER_LIST = ["naresh@ramailo.tech"]
+GOOGLE_SSO_AUTO_CREATE_FIRST_SUPERUSER = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -44,11 +59,14 @@ INSTALLED_APPS = [
     'blog_app',
     'rest_framework',
     'rest_framework_simplejwt',
+    "django_google_sso",
+    # "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -162,3 +180,69 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+LOG_DIR = os.path.join(BASE_DIR, 'log')
+
+if not os.path.exists(LOG_DIR):
+    os.mkdir(LOG_DIR)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "info": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOG_DIR, "info.log"),
+            "maxBytes": 1024*1024*300,
+            "formatter": "verbose",
+            "backupCount": 5
+
+        },
+        "warning": {
+            "level": "WARNING",
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "verbose",
+            "filename": os.path.join(LOG_DIR, "warning.log"),
+            "maxBytes": 1024*1024*300,
+            "backupCount": 5
+        }
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "propagate": True,
+        },
+        "info_log": {
+            "handlers": ["info"],
+            "propagate": True,
+            "level": "INFO",
+        },
+        "warning_log": {
+            "handlers": ["warning"],
+            "propagate": True,
+            "level": "WARNING"
+        }
+    },
+}

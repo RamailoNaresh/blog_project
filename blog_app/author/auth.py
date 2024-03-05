@@ -8,6 +8,9 @@ from rest_framework.parsers import JSONParser
 from blog_app.services.email_service import send_otp_mail
 from django.utils import timezone
 from django.utils.timezone import timedelta
+from blog_app.services.logger import logger, logger_info, logger_warning
+
+
 
 @api_view(["POST"])
 @csrf_exempt
@@ -24,10 +27,13 @@ def login_user(request):
             "user": author.data,
             "token": token
         }
+        logger_info.info(f"user {data['user']['name']} logged in.")
         return response_builder.get_200_login_success_response(api.LOGIN_SUCCESS, data)
     except ValueError as e:
+        logger_warning.warning(f"Value Error occurred {str(e)}")
         return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
-    except:
+    except Exception as e:
+        logger_warning.warning(f"Error occurred {str(e)}")
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 
@@ -43,9 +49,12 @@ def create_author(request):
             serializer.save()
             author = Author.get_user_by_email(serializer.data["email"])
             send_otp_mail(author)
+            logger_info.info(f"user {author.name} created.")
             return response_builder.get_201_success_response("Data succesfully created. Please check you email", serializer.data)
+        logger_warning.warning(serializer.errors)
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     except Exception as e:
+        logger_warning.warning(f"Error occurred {str(e)}")
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
 
@@ -62,20 +71,26 @@ def check_otp(request):
         if author.is_verified:
             return response_builder.get_201_success_response("User is already verified")
         if author.otp != otp:
+            logger_warning.warning(f"Invalid otp for {email}")
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
         if author.otp_sent_date + timedelta(minutes=10) <= timezone.now():
             author.otp = None
             author.save()
+            logger_warning.warning(f"Invalid otp for {email}")
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
         author.otp = None
         author.is_verified = True
         author.save()
         serializer = AuthorSerializer(author)
+        logger_info.info(f"verified {email}")
         return response_builder.get_201_success_response("User successfully verified", serializer.data)
     except KeyError:
+        logger_warning.warning(f"Key Error occurred {str(e)}")
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "All fields is required")
     except ValueError as e:
+        logger_warning.warning(f"Value Error occurred {str(e)}")
         return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
     except Exception as e:
+        logger_warning.warning(f"Error occurred {str(e)}")
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     

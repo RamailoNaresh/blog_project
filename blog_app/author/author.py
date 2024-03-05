@@ -1,4 +1,4 @@
-from .accessor import AuthorAccess
+from blog_app.author.accessor import AuthorAccess
 from blog_app.util.password_encoder import validate_password, encrypt_password
 from blog_app.services.tokens import generate_token
 
