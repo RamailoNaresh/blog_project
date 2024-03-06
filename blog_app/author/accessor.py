@@ -1,3 +1,4 @@
+from django.db.models import Q
 from blog_app.models import Author
 
 class AuthorAccess:
@@ -44,3 +45,8 @@ class AuthorAccess:
         author = AuthorAccess.get_author_by_id(author_id)
         author.otp = None
         author.save()
+
+    @staticmethod
+    def get_author_by_email_or_name(input_data):
+        data = Author.objects.filter(Q(name__icontains = input_data) | Q(email__icontains = input_data)).values()
+        return data

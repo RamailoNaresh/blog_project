@@ -60,3 +60,9 @@ class Author:
         author = Author.get_author_by_id(author_id)
         AuthorAccess.delete_otp(author_id)
 
+    @staticmethod
+    def get_author_by_email_or_name(input_data):
+        data = AuthorAccess.get_author_by_email_or_name(input_data)
+        if data:
+            return data
+        raise ValueError("No data available")

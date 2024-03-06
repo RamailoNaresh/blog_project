@@ -39,5 +39,6 @@ urlpatterns = [
     path("v1/forget_password/", forget_password_views.forget_password, name = "forget-password"),
     path("v1/forget_password/<str:token>/", forget_password_views.check_forget_password, name = "check-password"),
     path("v1/create_category_using_csv/", category_views.create_category_using_csv, name = "create-category-csv"),
-    path("v1/export_category_csv/", category_views.export_categories, name = "export-categories")
+    path("v1/export_category_csv/", category_views.export_categories, name = "export-categories"),
+    path("v1/search_author_by_email_or_name/", author_views.search_author_by_email_or_name, name = "search-author")
 ]

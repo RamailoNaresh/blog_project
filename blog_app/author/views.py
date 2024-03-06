@@ -103,3 +103,22 @@ def delete_author(request, id):
         logger_warning.warning(f"Error occurred {str(e)}")
         return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
     
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def search_author_by_email_or_name(request):
+    response_builder = ResponseBuilder()
+    try:
+        input_data = request.data.get("search_data")
+        if not input_data:
+            return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Fields cannotbe empty")
+        data = Author.get_author_by_email_or_name(input_data)
+        serializer = AuthorSerializer(data, many = True)
+        return response_builder.get_201_success_response("Data fetched", serializer.data)
+    except ValueError as e:
+        logger_warning.warning(f"Value Error occurred {str(e)}")
+        return response_builder.get_400_bad_request_response(api.AUTHOR_NOT_FOUND,str(e))
+    except Exception as e:
+        logger_warning.warning(f"Error occurred {str(e)}")
+        return response_builder.get_500_server_error_response(api.SERVER_ERROR, str(e))
