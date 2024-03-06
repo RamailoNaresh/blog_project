@@ -134,13 +134,22 @@ def create_category_using_csv(request):
             logger_info.info("File impoerted")
             if uploaded_file is not None:
                 file_contents = uploaded_file.read().decode("utf-8")
-                data = list(csv.DictReader(file_contents.splitlines()))
-                serializer = CategorySerializer(data =data, many = True)
-                if serializer.is_valid():
-                    serializer.save()
-                    logger_info.info(f"category created")
-                    return response_builder.get_201_success_response("Category successfully created", data)
-                return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+                datas = list(csv.DictReader(file_contents.splitlines()))
+                error = {}
+                error_data = []
+                added_data = []
+                for data in datas:
+                    serializer = CategorySerializer(data =data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        logger_info.info(f"category created")
+                        added_data.append(serializer.data)
+                    else:
+                        error_data.append(data)
+                if len(error_data) != 0:
+                    error["error_message"] = "Listed data are already in database"
+                    error["data"] = error_data
+                return response_builder.get_200_uploaded_data_from_csv(api.ADDED_DATA,error, added_data)
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "File is required")
         logger_warning.warning(f"Access denied {user.email}")
         return response_builder.get_401_unauthorized_access_response(api.UNAUTHORIZED_ACCESS)

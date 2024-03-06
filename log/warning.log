@@ -18,3 +18,4 @@ WARNING 2024-03-06 05:56:55,247 views 13716 140304166417984 Error occurred 'sear
 WARNING 2024-03-06 05:57:34,878 views 13787 139856080533056 Error occurred When a serializer is passed a `data` keyword argument you must call `.is_valid()` before attempting to access the serialized `.data` representation.
 You should either call `.is_valid()` first, or access `.initial_data` instead.
 WARNING 2024-03-06 05:59:31,648 views 13894 140617881638464 Value Error occurred No data available
+WARNING 2024-03-06 08:07:53,967 views 19430 140403330287168 Value Error occurred No data available

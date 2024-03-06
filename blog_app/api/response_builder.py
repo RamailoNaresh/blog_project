@@ -136,3 +136,8 @@ class ResponseBuilder(object):
     
 
 
+    def get_200_uploaded_data_from_csv(self, message, error_msg, result = {}):
+        return self.success().ok_200().message(message).result_object(result).error_object(error_msg).result_object(result).get_response()
+    
+
+
