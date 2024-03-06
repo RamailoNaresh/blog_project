@@ -1,0 +1,8 @@
+id,created_at,updated_at,title,description
+b644bd40568e4618a15b800a938b9bad,2024-02-23T03:53:50.036464Z,2024-02-23T03:53:50.036498Z,Entertainment,Contains entertainment related posts.
+5b1ca1fe7e024f3b9ac1c0fda91a2374,2024-02-23T03:54:03.473212Z,2024-02-23T03:54:03.473232Z,Education,Contains educational posts.
+bf06246a5ba348788baf3030bd2b58c7,2024-02-23T03:54:20.033739Z,2024-02-23T03:54:20.033765Z,Sports,Contains post related to sports.
+e62404df41c544f3bed29c6f090de8fb,2024-02-23T03:54:47.858144Z,2024-02-23T03:54:47.858259Z,Travel,Contains post of different adventures and travels.
+09385f8cd2ea4e39995ab4d008586f36,2024-02-23T06:21:20.191520Z,2024-02-23T08:38:26.954861Z,Culture,Cultural posts
+25dbbfb4ad854002b867158a97b3763a,2024-02-28T04:51:15.192859Z,2024-02-28T04:51:15.192877Z,Country,This is just the test for createing category.
+785fe4dfef79446b8952b4177b8ef426,2024-03-06T04:48:07.818695Z,2024-03-06T04:48:07.818723Z,Technology,This category is describing about technology

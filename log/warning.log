@@ -1,3 +1,16 @@
 WARNING 2024-03-05 06:47:35,253 auth 14214 139920524457536 {'email': [ErrorDetail(string='author with this email already exists.', code='unique')]}
 WARNING 2024-03-05 07:08:21,644 auth 15014 140277085709888 Error occurred JSON parse error - Expecting property name enclosed in double quotes: line 3 column 1 (char 23)
 WARNING 2024-03-05 07:08:58,247 views 15014 140277085709888 Access denied asdf@gmail.com
+WARNING 2024-03-06 04:00:48,703 views 7119 139832038532672 Unsupported media type "multipart/form-data; boundary=--------------------------358997901930633274134336" in request.
+WARNING 2024-03-06 04:01:49,329 views 7911 140584022455872 Unsupported media type "multipart/form-data; boundary=--------------------------755546069290794741823421" in request.
+WARNING 2024-03-06 04:03:11,988 views 8034 139871900149312 Unsupported media type "multipart/form-data; boundary=--------------------------435888226897438793077447" in request.
+WARNING 2024-03-06 04:03:54,712 views 8094 140558071588416 Unsupported media type "multipart/form-data; boundary=--------------------------160696810798202824363681" in request.
+WARNING 2024-03-06 04:07:43,320 views 8283 139750380926528 Missing filename. Request should include a Content-Disposition header with a filename parameter.
+WARNING 2024-03-06 04:08:12,126 views 8368 140420667405888 Missing filename. Request should include a Content-Disposition header with a filename parameter.
+WARNING 2024-03-06 04:09:02,713 views 8411 140107691656768 Unsupported media type "multipart/form-data; boundary=--------------------------485798696997474266011202" in request.
+WARNING 2024-03-06 04:44:51,699 views 11030 140062231094848 Data not found
+WARNING 2024-03-06 04:45:37,833 views 11133 139896312075840 Data not found
+WARNING 2024-03-06 04:52:09,576 views 11443 140118493525568 Data not found
+WARNING 2024-03-06 04:52:42,972 views 11486 140336033162816 Data not found
+WARNING 2024-03-06 04:53:05,963 views 11486 140336033162816 Data not found
+WARNING 2024-03-06 04:53:34,084 views 11575 139746866927168 dict contains fields not in fieldnames: 'updated_at', 'created_at', 'id'

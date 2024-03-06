@@ -5,7 +5,10 @@ class Category:
 
     @staticmethod
     def get_all_category():
-        return CategoryAccess.get_all_category()
+        data = CategoryAccess.get_all_category()
+        if data is not None:
+            return data
+        raise ValueError("No data available")
     
 
     @staticmethod

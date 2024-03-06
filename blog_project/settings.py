@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     "django_google_sso",
+    "import_export"
     # "corsheaders",
 ]
 

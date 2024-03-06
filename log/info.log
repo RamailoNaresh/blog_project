@@ -1,4 +1,0 @@
-INFO 2024-03-05 06:19:07,080 auth 13008 139856936711744 user logged in.
-INFO 2024-03-05 06:20:26,257 auth 13063 140612027115072 user{'id': 'eaa538bcb2e74749854b2246ec8e9c08', 'name': 'Naresh Tamang', 'email': 'naresh@ramailo.tech', 'bio': 'tester', 'role': 'User'} logged in.
-INFO 2024-03-05 06:20:46,962 auth 13115 139854648047168 userNaresh Tamang logged in.
-INFO 2024-03-05 07:08:52,913 views 15014 140277085709888 category fetched
